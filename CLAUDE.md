@@ -16,19 +16,40 @@ This is a **DeepAgents course materials** repository — a collection of Chinese
 
 ## Launchers & Provider Setup
 
-All launchers share the same pattern:
-1. Source API keys from `.claude/<provider>.local.env`, which in turn sources the shared config at `~/.config/ccinit/providers/<provider>.local.env`
-2. Run Claude Code with `--setting-sources project,local` (ignores global provider config)
-3. Default to `--permission-mode auto` (override with `CLAUDE_PERMISSION_MODE=default`)
+### 支持的模型提供商
 
-| Command | Purpose | Default Model |
+| 提供商 | API Key 环境变量 | API 端点 | 默认模型 |
+|---|---|---|---|
+| **GLM** (智谱 Coding Plan) | `GLM_PLAN_API_KEY` | `https://open.bigmodel.cn/api/anthropic` | `glm-5.1[1m]` |
+| **DeepSeek** | `DEEPSEEK_API_KEY` | — (使用官方默认端点) | `deepseek-v4-pro[1m]` |
+
+### GLM 模型映射
+
+GLM 提供商兼容 Anthropic API 格式，默认映射：
+
+```
+ANTHROPIC_DEFAULT_OPUS_MODEL   → glm-5.1
+ANTHROPIC_DEFAULT_SONNET_MODEL → glm-5-turbo
+ANTHROPIC_DEFAULT_HAIKU_MODEL  → glm-4.5-air
+```
+
+### 启动器一览
+
+| 命令 | 用途 | 默认模型 |
 |---|---|---|
-| `bash ./claude-glm` | Interactive Claude Code (GLM backend) | `glm-5.1[1m]` |
-| `bash ./claude-ds` | Interactive Claude Code (DeepSeek backend) | — |
-| `bash ./agent-view-glm` | Agent-view / multi-agent mode (GLM) | `glm-4.7` (override: `AGENT_VIEW_MODEL=glm-5.1`) |
-| `bash ./agent-view-ds` | Agent-view / multi-agent mode (DeepSeek) | `deepseek-v4-pro[1m]` |
+| `bash ./claude-glm` | 交互式 Claude Code (GLM 后端) | `glm-5.1[1m]` |
+| `bash ./claude-ds` | 交互式 Claude Code (DeepSeek 后端) | — |
+| `bash ./agent-view-glm` | Agent-View 多智能体模式 (GLM) | `glm-4.7` (覆盖: `AGENT_VIEW_MODEL=glm-5.1`) |
+| `bash ./agent-view-ds` | Agent-View 多智能体模式 (DeepSeek) | `deepseek-v4-pro[1m]` |
 
-Quick smoke test for any launcher: `bash ./claude-<provider> -p "Reply with exactly: hi" --output-format text`
+### 配置方式
+
+所有启动器遵循相同模式：
+1. **API Key 配置**：从项目级 `.claude/<provider>.local.env` 加载，该文件会自动 source 本机共享配置 `~/.config/ccinit/providers/<provider>.local.env`
+2. **Setting 来源**：使用 `--setting-sources project,local`，避免全局 provider 配置干扰
+3. **权限模式**：默认 `--permission-mode auto`；可通过 `CLAUDE_PERMISSION_MODE=default` 覆盖
+
+首次使用时，在本机共享配置文件中填入有效 API Key 即可。快速验证：`bash ./claude-<provider> -p "Reply with exactly: hi" --output-format text`
 
 ## Course Content Map
 

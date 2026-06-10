@@ -1,105 +1,100 @@
-# .
+# DeepAgents 课程资料
 
-这个目录已经初始化成可在 WSL 里运行的 Claude Code 项目环境。
+本仓库是 **DeepAgents 课程**的配套文档站，包含 21 讲中文讲义、3 个实验练习，以及可复用的 Prompt 模板。课程内容面向希望构建生产级 AI Agent 的工程师。
 
-模式：`both`
+> 本项目为纯文档仓库，不涉及构建/测试/lint 流程。
 
-Claude Code 建议启动方式：
+## 目录结构
 
-```bash
-bash ./claude-<provider> --version
+```
+deepagents_course/
+├── deepagents_course_texts/        # 课程讲义 (00–20)
+│   ├── labs/                       # 动手实验 (3 个)
+│   └── prompts/                    # Prompt 模板
+├── claude-glm                      # Claude Code 启动器 (GLM)
+├── claude-ds                       # Claude Code 启动器 (DeepSeek)
+├── agent-view-glm                  # Agent-View 多智能体模式 (GLM)
+├── agent-view-ds                   # Agent-View 多智能体模式 (DeepSeek)
+└── CLAUDE.md                       # Claude Code 项目指引
 ```
 
-## DeepSeek
+## 课程内容概览
 
-只需要一次性配置这份本机共享文件：
+讲义由浅入深，覆盖从基础到生产的完整链路：
 
-```bash
-/home/yy834/.config/ccinit/providers/deepseek.local.env
+| 范围 | 主题 |
+|---|---|
+| **01–03** | Agent Harness 概念、DeepAgents/LangChain/LangGraph 关系、最小可运行 Demo |
+| **04–07** | 默认工具、上下文工程、后端、文件系统上下文、沙箱 |
+| **08–10** | 自定义工具开发、记忆、子智能体 |
+| **11–15** | Prompt 设计、Human-in-the-Loop、权限、Trace/Debug/Eval、部署与成本控制 |
+| **16–17** | 两个毕业项目 — 代码仓库分析 Agent、事件验证 Agent |
+| **18–20** | 面试 Q&A、Codex 工作流集成、官方资源链接 |
+
+## 模型后端与启动器
+
+本项目提供 4 个 Shell 启动器，可在 WSL 环境下通过不同模型后端运行 Claude Code：
+
+### 支持的模型提供商
+
+| 提供商 | API Key 环境变量 | API 端点 | 默认模型 |
+|---|---|---|---|
+| **GLM** (智谱 Coding Plan) | `GLM_PLAN_API_KEY` | `https://open.bigmodel.cn/api/anthropic` | `glm-5.1[1m]` |
+| **DeepSeek** | `DEEPSEEK_API_KEY` | — (使用官方默认端点) | `deepseek-v4-pro[1m]` |
+
+### GLM 模型映射
+
+GLM 提供商兼容 Anthropic API 格式，模型映射关系如下：
+
+```
+ANTHROPIC_DEFAULT_OPUS_MODEL   → glm-5.1
+ANTHROPIC_DEFAULT_SONNET_MODEL → glm-5-turbo
+ANTHROPIC_DEFAULT_HAIKU_MODEL  → glm-4.5-air
 ```
 
-如果你还没填过 key，把这行占位符改掉：
-
-```bash
-export DEEPSEEK_API_KEY='REPLACE_WITH_YOUR_VALID_DEEPSEEK_KEY'
-```
-
-新项目里的：
-
-```bash
-.claude/deepseek.local.env
-```
-
-会自动 source 上面的共享配置，所以你以后再跑 `ccinit`，默认就能直接 `bash ./claude-ds`。
-只有这个项目想单独覆盖时，才需要改项目里的这个文件。
-
-常用命令：
-
-```bash
-bash ./claude-ds -p "Reply with exactly: hi" --output-format text
-bash ./claude-ds
-bash ./agent-view-ds --json
-bash ./agent-view-ds
-```
-
-## GLM Coding Plan
-
-只需要一次性配置这份本机共享文件：
-
-```bash
-/home/yy834/.config/ccinit/providers/glm.local.env
-```
-
-如果你还没填过 key，把这行占位符改掉：
-
-```bash
-export GLM_PLAN_API_KEY='REPLACE_WITH_YOUR_VALID_GLM_CODING_PLAN_KEY'
-```
-
-新项目里的：
-
-```bash
-.claude/glm.local.env
-```
-
-会自动 source 上面的共享配置，所以你以后再跑 `ccinit`，默认就能直接 `bash ./claude-glm`。
-只有这个项目想单独覆盖时，才需要改项目里的这个文件。
-
-固定端点：
-
-```text
-https://open.bigmodel.cn/api/anthropic
-```
-
-当前默认模型映射：
-
-```text
-ANTHROPIC_DEFAULT_OPUS_MODEL=glm-5.1
-ANTHROPIC_DEFAULT_SONNET_MODEL=glm-5-turbo
-ANTHROPIC_DEFAULT_HAIKU_MODEL=glm-4.5-air
-```
-
-如果你想切回更保守的 4.7，去共享配置里手动改：
+如需切回更保守的 `glm-4.7`，可在共享配置中覆盖：
 
 ```bash
 export ANTHROPIC_DEFAULT_OPUS_MODEL='glm-4.7'
 export ANTHROPIC_DEFAULT_SONNET_MODEL='glm-4.7'
 ```
 
-常用命令：
+### 启动器一览
+
+| 命令 | 用途 | 默认模型 |
+|---|---|---|
+| `bash ./claude-glm` | 交互式 Claude Code (GLM 后端) | `glm-5.1[1m]` |
+| `bash ./claude-ds` | 交互式 Claude Code (DeepSeek 后端) | — |
+| `bash ./agent-view-glm` | Agent-View 多智能体模式 (GLM) | `glm-4.7` (覆盖: `AGENT_VIEW_MODEL=glm-5.1`) |
+| `bash ./agent-view-ds` | Agent-View 多智能体模式 (DeepSeek) | `deepseek-v4-pro[1m]` |
+
+### 配置方式
+
+所有启动器遵循相同模式：
+
+1. **API Key 配置**：从项目级 `.claude/<provider>.local.env` 加载，该文件会自动 source 本机共享配置 `~/.config/ccinit/providers/<provider>.local.env`
+2. **Setting 来源**：使用 `--setting-sources project,local`，避免全局 provider 配置干扰
+3. **权限模式**：默认 `--permission-mode auto`；可通过 `CLAUDE_PERMISSION_MODE=default` 覆盖
+
+首次使用时，在本机共享配置文件中填入有效 API Key：
+
+```bash
+# GLM
+vim ~/.config/ccinit/providers/glm.local.env
+# 填写: export GLM_PLAN_API_KEY='your_valid_key'
+
+# DeepSeek
+vim ~/.config/ccinit/providers/deepseek.local.env
+# 填写: export DEEPSEEK_API_KEY='your_valid_key'
+```
+
+### 快速验证
 
 ```bash
 bash ./claude-glm -p "Reply with exactly: hi" --output-format text
-bash ./claude-glm
-bash ./agent-view-glm --json
-bash ./agent-view-glm
-AGENT_VIEW_MODEL='glm-5.1' bash ./agent-view-glm
+bash ./claude-ds  -p "Reply with exactly: hi" --output-format text
 ```
 
-## 备注
+## 语言
 
-- 这里固定使用 `--setting-sources project,local`，避免误吃全局 provider 配置。
-- launcher 默认使用 `--permission-mode auto`；如果某次想改回别的模式，可以临时加环境变量：`CLAUDE_PERMISSION_MODE=default bash ./claude-glm`
-- 如果当前目录已有 `README.md`，初始化脚本会改写到 `CC-README.md`，避免覆盖原 README。
-- 默认共享 key 文件在 `/home/yy834/.config/ccinit/providers/`，只要这里配好一次，后续新项目会直接复用。
-- 项目里的 `.claude/*.local.env` 仍然加入了 `.gitignore`，可以安全写项目级覆盖。
+所有课程内容均为**中文**。
