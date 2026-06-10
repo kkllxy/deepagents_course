@@ -135,5 +135,3 @@ nav:
   - 模板:
       - Codex POC Prompt: prompts/codex-poc-prompt.md
       - Runbook 输出模板: prompts/runbook-output-template.md
-  - 附录:
-      - 文件清单: MANIFEST.md
