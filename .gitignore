@@ -1,3 +1,9 @@
 .claude/deepseek.local.env
 .claude/glm.local.env
 *:Zone.Identifier
+
+# Wrapper scripts
+claude-glm
+claude-ds
+agent-view-glm
+agent-view-ds
