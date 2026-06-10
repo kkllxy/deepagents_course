@@ -1,5 +1,6 @@
-.claude/deepseek.local.env
-.claude/glm.local.env
+# Claude Code
+.claude/
+
 *:Zone.Identifier
 
 # Wrapper scripts
