@@ -7,3 +7,7 @@ claude-glm
 claude-ds
 agent-view-glm
 agent-view-ds
+
+# MkDocs build artifacts
+.venv/
+site/

@@ -1,0 +1,8 @@
+# MkDocs core
+mkdocs>=1.6.0
+
+# Material theme
+mkdocs-material>=9.5.0
+
+# Required extensions (bundled with mkdocs-material but listed explicitly)
+pymdown-extensions>=10.0
